@@ -45,6 +45,10 @@ Resources:
             RestApiId: !Ref ApiGateway
             Path: /update-counter
             Method: post
+      AutoPublishAlias: live
+      DeploymentPreference:
+        Type: AllAtOnce
+      VersionDescription: !Sub ${AWS::StackName}-${AWS::StackId}
 
   ApiGateway:
     Type: AWS::Serverless::Api
@@ -71,3 +75,9 @@ Outputs:
   CounterTableName:
     Description: "DynamoDB table name"
     Value: !Ref CounterTable
+  FunctionVersion:
+    Description: "Lambda function version"
+    Value: !Ref DotnetLambdaFunction.Version
+  FunctionAlias:
+    Description: "Lambda function alias"
+    Value: !Ref DotnetLambdaFunction.Alias
