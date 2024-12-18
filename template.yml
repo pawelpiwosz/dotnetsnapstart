@@ -23,8 +23,8 @@ Resources:
       Handler: DotnetLambdaFunction::DotnetLambdaFunction.FunctionHandler::HandleAsync
       Runtime: dotnet8
       CodeUri: C:/Users/pawel/GIT/dotnetsnapstart/dotnet-lambda-sam-app/src/DotnetLambdaFunction/bin/Release/net8.0/linux-x64/publish/
-      MemorySize: 512    # Reduced since DynamoDB works fine
-      Timeout: 30        # Reduced to fail fast if response handling issues
+      MemorySize: 512
+      Timeout: 30
       Tracing: Active
       Layers:
         - !Sub arn:aws:lambda:${AWS::Region}:580247275435:layer:LambdaInsightsExtension:14
@@ -33,6 +33,7 @@ Resources:
           POWERTOOLS_METRICS_NAMESPACE: DotnetLambdaCounter
           POWERTOOLS_SERVICE_NAME: CounterService
           TABLE_NAME: !Ref CounterTable
+          AWS_LAMBDA_DOTNET_PREJIT: always
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref CounterTable
@@ -45,6 +46,8 @@ Resources:
             RestApiId: !Ref ApiGateway
             Path: /update-counter
             Method: post
+      SnapStart:
+        ApplyOn: PublishedVersions
       AutoPublishAlias: live
       DeploymentPreference:
         Type: AllAtOnce
